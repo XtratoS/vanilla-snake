@@ -1,0 +1,26 @@
+.game-board {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 1em;
+  padding: .5em;
+  border: 1px solid black;
+  width: 40em;
+}
+
+.game-cell {
+  height: 1em;
+  width: 1em;
+  background-color: rgb(171, 149, 192);
+}
+
+.game-cell.type-EMPTY {
+  background-color: red;
+}
+
+.game-cell.type-SNAKE {
+  background-color: black;
+}
+
+.game-cell.type-FOOD {
+  background-color: blue;
+}
