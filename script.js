@@ -1,158 +1,3 @@
-// const GRID_COUNT = 20;
-// const CELL_TYPES = {
-//   "EMPTY": 1,
-//   "SNAKE": 2,
-//   "FOOD": 3
-// }
-// const DIRECTIONS = [
-//   "ArrowUp",
-//   "ArrowRight",
-//   "ArrowDown",
-//   "ArrowLeft"
-// ]
-// const VALID_DIRECTIONS = {
-//   "ArrowUp": ["ArrowRight", "ArrowLeft"],
-//   "ArrowDown": ["ArrowRight", "ArrowLeft"],
-//   "ArrowRight": ["ArrowUp", "ArrowDown"],
-//   "ArrowLeft": ["ArrowUp", "ArrowDown"],
-// }
-
-// const abortController = new AbortController();
-// const Grid = [];
-// let Snake = [[GRID_COUNT/2, GRID_COUNT/2]]
-// let latestInput = "ArrowRight";
-// let gameInterval;
-
-// const onKeyPressHandleEnter = (ev) => {
-//   const { key } = ev;
-//   // console.log(ev);
-//   if (key === "Enter") {
-//     startGame(Grid, Snake);
-//     // console.log("start game");
-//     // abortController.abort();
-//   }
-//   if (DIRECTIONS.includes(key) && VALID_DIRECTIONS[latestInput].includes(key)) {
-//     latestInput = key;
-//   }
-// }
-
-// const startGame = (grid, snake) => {
-//   initializeGrid(grid, snake);
-//   gameInterval = setInterval(() => {
-//     moveSnake(grid, snake, latestInput);
-//     updateGrid(grid, snake);
-//     drawGrid(grid);
-//   }, 100);
-// }
-
-// const createFood = (grid, snake) => {
-//   let randomX = snake[0][1];
-//   let randomY = snake[0][0];
-//   while (snake.map(cell => cell[1]).includes(randomX)) {
-//     randomX = Math.floor(Math.random() * GRID_COUNT);
-//   }
-//   while (snake.map(cell => cell[0]).includes(randomY)) {
-//     randomY = Math.floor(Math.random() * GRID_COUNT);
-//   }
-//   grid[randomY][randomX] = CELL_TYPES.FOOD;
-//   console.log(JSON.stringify(grid));
-// }
-
-// const eatFood = (grid, snake) => {
-//   const snakeHeadY = snake[0][0];
-//   const snakeHeadX = snake[0][1];
-//   if (!(snakeHeadY in grid)) return false;
-//   const snakeHeadPositionHasFood = grid[snakeHeadY][snakeHeadX] === CELL_TYPES.FOOD;
-//   return snakeHeadPositionHasFood;
-// }
-
-// const clamp = (num, min, max) => {
-//   return Math.min(Math.max(num, min), max);
-// }
-
-// const endGame = (grid, snake) => {
-//   initializeGrid(grid, snake);
-//   clearInterval(gameInterval);
-//   latestInput = "ArrowRight";
-//   alert("GAME OVER");
-// }
-
-// const moveSnake = (grid, snake, direction) => {
-//   const motion = MotionMap[direction];
-//   let snakeHead = [snake[0][0] + motion[1], snake[0][1] + motion[0]];
-//   snake.unshift(snakeHead);
-//   if (eatFood(grid, snake)) {
-//     createFood(grid, snake);
-//   } else {
-//     const poppedSnakeCell = snake.pop();
-//     grid[poppedSnakeCell[0]][poppedSnakeCell[1]] = CELL_TYPES.EMPTY;
-//   }
-//   // console.log(snakeHead);
-//   if (isSnakeDead(snakeHead)) {
-//     endGame(grid, snake);
-//   }
-//   if (snakeHead[0] in grid) {
-//     grid[snakeHead[0]][snakeHead[1]] = CELL_TYPES.SNAKE;
-//   }
-//   const snakeSet = new Set(snake.map(cell => JSON.stringify(cell)));
-//   console.log(snakeSet.length, snake.length);
-//   if (snakeSet.size < snake.length) {
-//     endGame(grid, snake);
-//   }
-//   console.log(JSON.stringify(snake));
-// }
-
-// const isSnakeDead = (snakeHead) => {
-//   // console.log(snakeHead);
-//   for (let i=0; i<2; i++) {
-//     if (snakeHead[i] < 0 || snakeHead[i] >= GRID_COUNT) {
-//       return true;
-//     }
-//   }
-//   return false;
-// }
-
-// document.addEventListener("DOMContentLoaded", () => {
-//   initializeGrid(Grid, Snake);
-//   document.addEventListener("keydown", onKeyPressHandleEnter, {signal: abortController.signal});
-// });
-
-// const initializeGrid = (grid, snake) => {
-//   for (let y=0; y<GRID_COUNT; y++) {
-//     grid[y] = [];
-//     for (let x=0; x<GRID_COUNT; x++) {
-//       grid[y][x] = CELL_TYPES.EMPTY;
-//     }
-//   }
-//   snake.splice(0, snake.length);
-//   snake.push([GRID_COUNT/2, GRID_COUNT/2]);
-//   grid[snake[0][0]][snake[0][1]] = CELL_TYPES.SNAKE;
-//   createFood(grid, snake);
-// }
-
-// const updateGrid = (grid, snake) => {
-//   // for (let y=0; y<GRID_COUNT; y++) {
-//   //   grid[y] = [];
-//   //   for (let x=0; x<GRID_COUNT; x++) {
-//   //     grid[y][x] = CELL_TYPES.EMPTY;
-//   //   }
-//   // }
-//   // grid[snake[0][0]][snake[0][1]] = CELL_TYPES.SNAKE;
-// }
-
-// const drawGrid = (grid) => {
-//   const gameBoard = document.querySelector('#game-board');
-//   const newChildren = [];
-//   for (let y=0; y<GRID_COUNT; y++) {
-//     for (let x=0; x<GRID_COUNT; x++) {
-//       const newCell = createCell(`cell-${y}-${x}`);
-//       newCell.classList.add(`type-${grid[y][x]}`)
-//       newChildren.push(newCell);
-//     }
-//   }
-//   gameBoard.replaceChildren(...newChildren);
-// }
-
 const createCell = (cellId) => {
   const cellDiv = document.createElement('div');
   cellDiv.id = cellId;
@@ -161,6 +6,13 @@ const createCell = (cellId) => {
 }
 
 //=======================//
+
+const GAME_STATE = {
+  DEFAULT: "DEFAULT",
+  ONGOING: "ONGOING",
+  PAUSED: "PAUSED",
+  ENDED: "ENDED"
+}
 
 const CELL_CONTENT = {
   EMPTY: "EMPTY",
@@ -206,15 +58,53 @@ document.addEventListener("DOMContentLoaded", () => {
   main();
 });
 
+const keyDownEventListener = (ev, gameState) => {
+  const {key} = ev;
+  document.dispatchEvent(new CustomEvent("setSnakeDirection", {detail: key}));
+  if (gameState === GAME_STATE.ONGOING && key === "Escape") {
+    document.dispatchEvent(new Event("pauseWorld"));
+    return;
+  }
+}
+
+const showPauseMenu = () => {
+  const menu = document.querySelector("#pause-menu");
+  const overlay = document.querySelector("#overlay");
+  menu.classList.remove("hidden");
+  overlay.classList.remove("hidden");
+}
+
+const startCounter = () => {
+  const menu = document.querySelector("#pause-menu");
+  const overlay = document.querySelector("#overlay");
+  const counter = document.querySelector("#counter");
+  menu.classList.add("hidden");
+  counter.textContent = "3";
+  counter.classList.remove("hidden");
+  setTimeout(() => {
+    counter.textContent = "2";
+    setTimeout(() => {
+      counter.textContent = "1";
+      setTimeout(() => {
+        counter.classList.add("hidden");
+        overlay.classList.add("hidden");
+        document.dispatchEvent(new Event("unpauseWorld"));
+      }, 1000);
+    }, 1000);
+  }, 1000);
+}
+
 class Snake {
   constructor(x, y) {
     this.direction = DIRECTIONS.RIGHT;
     this.directionLock = false;
     this.cells = [[x, y]];
+    document.addEventListener("setSnakeDirection", (ev) => {this.setDirection(ev.detail)})
   }
   
   setDirection(dir) {
     if (this.directionLock) return;
+    if (!VALID_DIRECTIONS[this.direction].includes(dir)) return;
     this.direction = dir;
     this.directionLock = true;
   }
@@ -273,18 +163,10 @@ class Snake {
     let [x ,y] = this.cells[0];
     if (x < 0 || y < 0 || x >= this.world.dimension || y >= this.world.dimension) return true;
     const snakeSet = new Set(this.cells.map(cell => JSON.stringify(cell)));
-    console.log(snakeSet.size, this.cells.length);
     if (snakeSet.size < this.cells.length) {
       return true;
     }
     return false;
-  }
-}
-
-const keyDownEventListener = (world, ev) => {
-  const {key} = ev;
-  if (VALID_DIRECTIONS[world.snake.direction].includes(key)) {
-    world.snake.setDirection(key);
   }
 }
 
@@ -294,10 +176,13 @@ class World {
     this.dimension = dimension;
     this.snake = snake;
     this.grid = [];
+    this.gameState = GAME_STATE.DEFAULT;
     this.interval = () => {};
     snake.setWorld(this);
     this.initializeGrid();
-    document.addEventListener("keydown", (ev) => {keyDownEventListener(this, ev)});
+    document.addEventListener("keydown", (ev) => {keyDownEventListener(ev, this.gameState)});
+    document.addEventListener("pauseWorld", () => {this.pause()});
+    document.addEventListener("unpauseWorld", () => {this.start()});
   }
 
   initializeGrid() {
@@ -317,6 +202,7 @@ class World {
   }
 
   getCellContent(x, y) {
+    if (!this.grid[y]) return null;
     return this.grid[y][x];
   }
 
@@ -345,6 +231,7 @@ class World {
   }
 
   start() {
+    this.gameState = GAME_STATE.ONGOING;
     this.interval = setInterval(() => {
       if (this.snake.willSnakeEatFoodNextMove()) {
         this.snake.grow();
@@ -353,10 +240,17 @@ class World {
         this.snake.move();
       }
       this.render();
-    }, 150);
+    }, 100);
+  }
+
+  pause() {
+    this.gameState = GAME_STATE.PAUSED;
+    showPauseMenu();
+    clearInterval(this.interval);
   }
 
   stop() {
+    this.gameState = GAME_STATE.ENDED;
     clearInterval(this.interval);
   }
 }
