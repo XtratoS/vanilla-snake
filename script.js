@@ -42,6 +42,7 @@ const VALID_DIRECTIONS = {
 }
 
 const GRID_COUNT = 40;
+const INPUT_BUFFER_SIZE = 3;
 
 function main () {
   const parentDiv = document.querySelector('#game-board');
@@ -60,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const keyDownEventListener = (ev, gameState) => {
   const {key} = ev;
-  document.dispatchEvent(new CustomEvent("setSnakeDirection", {detail: key}));
+  document.dispatchEvent(new CustomEvent("bufferDirection", {detail: key}));
   if (gameState === GAME_STATE.ONGOING && key === "Escape") {
     document.dispatchEvent(new Event("pauseWorld"));
     return;
@@ -99,7 +100,18 @@ class Snake {
     this.direction = DIRECTIONS.RIGHT;
     this.directionLock = false;
     this.cells = [[x, y]];
-    document.addEventListener("setSnakeDirection", (ev) => {this.setDirection(ev.detail)})
+    this.directionBuffer = [];
+    document.addEventListener("bufferDirection", (ev) => {this.writeIntoDirectionBuffer(ev.detail)});
+  }
+
+  writeIntoDirectionBuffer(dir) {
+    this.directionBuffer.push(dir);
+    while(this.directionBuffer.length > INPUT_BUFFER_SIZE) this.directionBuffer.shift();
+  }
+
+  readFromDirectionBuffer() {
+    if (this.directionBuffer.length === 0) return;
+    this.setDirection(this.directionBuffer.shift());
   }
   
   setDirection(dir) {
@@ -122,14 +134,6 @@ class Snake {
     const [headX, headY] = this.getHead();
     const newHead = [headX + motionX, headY + motionY];
     return newHead;
-  }
-
-  nextMove() {
-    if (this.willSnakeEatFoodNextMove()) {
-      this.grow();
-    } else {
-      this.move();
-    }
   }
 
   willSnakeEatFoodNextMove() {
@@ -233,6 +237,7 @@ class World {
   start() {
     this.gameState = GAME_STATE.ONGOING;
     this.interval = setInterval(() => {
+      this.snake.readFromDirectionBuffer();
       if (this.snake.willSnakeEatFoodNextMove()) {
         this.snake.grow();
         this.createFood();
