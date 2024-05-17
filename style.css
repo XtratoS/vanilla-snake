@@ -1,11 +1,16 @@
 html, body {
   margin: 0;
   padding: 0;
+  height: 100vh;
+  width: 100vw;
 }
 
 .container {
+  position: relative;
   margin: 0;
   padding: 0;
+  height: 100%;
+  width: 100%;
   box-sizing: border-box;
   display: grid;
   place-content: center;
@@ -49,7 +54,20 @@ html, body {
   background-color: #00000050;
 }
 
-#pause-menu {
+#overlay-menu {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+#menu-content {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(255, 166, 0, 0.257);
+}
+
+.pause-menu {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -62,7 +80,7 @@ html, body {
   overflow: hidden;
 }
 
-#pause-menu .choice {
+.pause-menu .choice {
   font-size: 2em;
   padding: 1em;
   background-color: rgb(44, 44, 44);
@@ -71,11 +89,11 @@ html, body {
   cursor: pointer;
 }
 
-#pause-menu .choice:hover {
+.pause-menu .choice:hover {
   background-color: rgb(78, 78, 78);
 }
 
-#counter {
+.counter {
   position: absolute;
   height: 100vh;
   width: 100vw;
