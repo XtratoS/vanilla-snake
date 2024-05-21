@@ -50,9 +50,11 @@ function main () {
   const world = new World(parentDiv, GRID_COUNT, snake);
   world.createFood();
   world.render();
-  setTimeout(() => {
+  showOverlayMenu();
+  countDown(3, () => {
+    hideOverlayMenu();
     world.start();
-  }, 1000);
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -68,31 +70,87 @@ const keyDownEventListener = (ev, gameState) => {
   }
 }
 
-const showPauseMenu = () => {
-  const menu = document.querySelector("#pause-menu");
-  const overlay = document.querySelector("#overlay");
-  menu.classList.remove("hidden");
-  overlay.classList.remove("hidden");
+const showOverlayMenu = () => {
+  const backdrop = document.querySelector("#backdrop");
+  const overlayMenu = document.querySelector("#overlay-menu");
+  backdrop.classList.remove("hidden");
+  overlayMenu.classList.remove("hidden");
 }
 
-const startCounter = () => {
-  const menu = document.querySelector("#pause-menu");
-  const overlay = document.querySelector("#overlay");
-  const counter = document.querySelector("#counter");
-  menu.classList.add("hidden");
-  counter.textContent = "3";
-  counter.classList.remove("hidden");
+const hideOverlayMenu = () => {
+  const backdrop = document.querySelector("#backdrop");
+  const overlayMenu = document.querySelector("#overlay-menu");
+  backdrop.classList.add("hidden");
+  overlayMenu.classList.add("hidden");
+  clearMenuContainer();
+}
+
+function clearMenuContainer () {
+  const menuContainer = document.querySelector("#menu-content");
+  menuContainer.replaceChildren();
+}
+
+const resumeButtonClick = (startGame) => {
+  countDown(3, () => {
+    hideOverlayMenu();
+    clearMenuContainer();
+    startGame();
+  });
+}
+
+function countDown (counter, callback) {
+  const menuContainer = document.querySelector("#menu-content");
+  const counterDiv = document.createElement("div");
+  counterDiv.classList.add("counter");
+  counterDiv.textContent = counter.toString();
+  menuContainer.replaceChildren(counterDiv);
+  let timer = 1;
+  while (counter-- > 1) {
+    setTimeout((counter) => {
+      counterDiv.textContent = counter.toString();
+    }, timer++ * 1000, counter);
+  }
   setTimeout(() => {
-    counter.textContent = "2";
-    setTimeout(() => {
-      counter.textContent = "1";
-      setTimeout(() => {
-        counter.classList.add("hidden");
-        overlay.classList.add("hidden");
-        document.dispatchEvent(new Event("unpauseWorld"));
-      }, 1000);
-    }, 1000);
-  }, 1000);
+    callback();
+  }, timer * 1000);
+}
+
+const showPauseMenu = (startGame) => {
+  const overlayMenu = document.querySelector("#overlay-menu");
+  const menuContainer = document.querySelector("#menu-content");
+  const menu = document.createElement("div");
+  menu.classList.add("pause-menu");
+
+  const resumeButton = document.createElement("div");
+  resumeButton.classList.add("choice");
+  resumeButton.textContent = "Resume";
+  resumeButton.onclick = () => { resumeButtonClick(startGame) };
+
+  const restartButton = document.createElement("div");
+  restartButton.classList.add("choice");
+  restartButton.textContent = "Restart";
+  restartButton.onclick = () => { location.reload() };
+
+  menu.appendChild(resumeButton);
+  menu.appendChild(restartButton);
+
+  const selectOption = (nodeList, index) => {
+    nodeList.forEach(node => {
+      node.classList.remove("selected");
+    });
+    nodeList[index].classList.add("selected");
+  }
+  
+  selectOption(menu.childNodes, 0);
+  menu.childNodes.forEach((node, i) => {
+    node.onmouseover = () => {
+      selectOption(menu.childNodes, i);
+    }
+  })
+
+  showOverlayMenu();
+  menuContainer.appendChild(menu);
+  overlayMenu.classList.remove("hidden");
 }
 
 class Snake {
@@ -250,7 +308,7 @@ class World {
 
   pause() {
     this.gameState = GAME_STATE.PAUSED;
-    showPauseMenu();
+    showPauseMenu(() => {this.start()});
     clearInterval(this.interval);
   }
 

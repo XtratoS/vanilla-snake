@@ -5,8 +5,8 @@
 * Handle game state after loss
 * Handle reset upon loss
 * Ability to start game
-* Ability to pause game
-* Ability to restart game from paused state
+* [x] Ability to pause game
+* [x] Ability to restart game from paused state
 * Ability to set game speed
 * Show game score
 * Show current game time

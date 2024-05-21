@@ -3,6 +3,7 @@ html, body {
   padding: 0;
   height: 100vh;
   width: 100vw;
+  overflow: hidden; /* Prevent overflow for the body */
 }
 
 .container {
@@ -32,7 +33,7 @@ html, body {
 }
 
 .game-cell.type-EMPTY {
-  background-color: red;
+  background-color: rgb(200, 200, 200);
 }
 
 .game-cell.type-SNAKE {
@@ -40,34 +41,79 @@ html, body {
 }
 
 .game-cell.type-FOOD {
-  background-color: blue;
+  background-color: rgb(255, 72, 0);
 }
 
 .hidden {
   display: none !important;
 }
 
-#overlay {
-  position: absolute;
-  height: 100vh;
-  width: 100vw;
-  background-color: #00000050;
+#backdrop {
+  position: fixed; /* Changed from absolute to fixed */
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  overflow: hidden; /* Ensure no overflow */
 }
 
 #overlay-menu {
-  position: absolute;
+  position: fixed; /* Changed from absolute to fixed */
+  top: 0;
+  left: 0;
   height: 100%;
   width: 100%;
+  overflow: hidden; /* Ensure no overflow */
 }
 
 #menu-content {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 100%;
   width: 100%;
-  background-color: rgba(255, 166, 0, 0.257);
+  /* background-color: rgba(255, 166, 0, 0.257); */
+}
+
+.counter {
+  position: relative;
+  height: 50%;
+  width: 50%;
+  display: grid;
+  place-content: center;
+  font-size: 10em;
+  font-weight: bold;
+  color: rgb(19, 19, 19);
+  -webkit-text-stroke:2px rgb(240, 240, 240);
+  user-select: none;
 }
 
 .pause-menu {
+  position: relative;
+  width: 100%;
+  background-color: rgba(25, 30, 77, 0.3);
+  padding-left: 40%;
+}
+
+.pause-menu .choice {
+  position: relative;
+  font-size: 2em;
+  cursor: pointer;
+}
+
+.pause-menu .choice.selected {
+  -webkit-text-stroke: 2px rgb(0, 132, 198);
+}
+
+.pause-menu .choice.selected::before {
+  position: absolute;
+  left: -2em;
+  content: "➤";
+}
+
+/* .pause-menu {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -104,4 +150,4 @@ html, body {
   font-weight: bold;
   -webkit-text-stroke:2px rgb(240, 240, 240);
   user-select: none;
-}
+} */
