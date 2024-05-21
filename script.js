@@ -58,8 +58,33 @@ function main() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("gameOver", gameOverHandler);
   main();
 });
+
+function gameOverHandler (ev) {
+  const menuContainer = document.querySelector("#menu-content");
+
+  const menu = document.createElement("div");
+  menu.classList.add("pause-menu");
+
+  const playAgainBtn = document.createElement("div");
+  playAgainBtn.classList.add("choice", "selected");
+  playAgainBtn.textContent = "Play Again";
+  playAgainBtn.onclick = () => {
+    location.reload();
+  };
+  menu.appendChild(playAgainBtn);
+
+  const titleDiv = document.createElement("div");
+  titleDiv.classList.add("title");
+  titleDiv.textContent = "Game Over";
+  
+  menuContainer.appendChild(titleDiv);
+  menuContainer.appendChild(menu);
+
+  showOverlayMenu();
+}
 
 const keyDownEventListener = (ev, gameState) => {
   const { key } = ev;
@@ -120,7 +145,6 @@ function countDown(counter, callback) {
 }
 
 const showPauseMenu = (startGame) => {
-  const overlayMenu = document.querySelector("#overlay-menu");
   const menuContainer = document.querySelector("#menu-content");
   const menu = document.createElement("div");
   menu.classList.add("pause-menu");
@@ -158,7 +182,6 @@ const showPauseMenu = (startGame) => {
 
   showOverlayMenu();
   menuContainer.appendChild(menu);
-  overlayMenu.classList.remove("hidden");
 };
 
 class Snake {
@@ -218,7 +241,7 @@ class Snake {
     this.cells.unshift(newHead);
     const [x, y] = newHead;
     if (this.isDead()) {
-      this.world.stop();
+      this.world.gameOver();
       return false;
     }
     this.world.setContent(x, y, CELL_CONTENT.SNAKE);
@@ -320,8 +343,10 @@ class World {
     this.interval = setInterval(() => {
       this.snake.readFromDirectionBuffer();
       if (this.snake.willSnakeEatFoodNextMove()) {
-        this.snake.grow();
-        this.createFood();
+        const grown = this.snake.grow();
+        if (grown) {
+          this.createFood();
+        }
       } else {
         this.snake.move();
       }
@@ -340,5 +365,11 @@ class World {
   stop() {
     this.gameState = GAME_STATE.ENDED;
     clearInterval(this.interval);
+  }
+
+  gameOver() {
+    this.gameState = GAME_STATE.ENDED;
+    clearInterval(this.interval);
+    document.dispatchEvent(new Event("gameOver"));
   }
 }

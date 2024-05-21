@@ -70,11 +70,17 @@ html, body {
 #menu-content {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
   width: 100%;
   /* background-color: rgba(255, 166, 0, 0.257); */
+}
+
+#menu-content .title {
+  font-size: 4em;
+  -webkit-text-stroke: 2px rgb(199, 216, 225);
 }
 
 .counter {
@@ -104,7 +110,7 @@ html, body {
 }
 
 .pause-menu .choice.selected {
-  -webkit-text-stroke: 2px rgb(0, 132, 198);
+  -webkit-text-stroke: 1px rgb(0, 132, 198);
 }
 
 .pause-menu .choice.selected::before {

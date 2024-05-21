@@ -2,7 +2,7 @@
 
 ## Stage 1:
 
-* Handle game state after loss
+* [x] Handle game state after loss
 * Handle reset upon loss
 * Ability to start game
 * [x] Ability to pause game
