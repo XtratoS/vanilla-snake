@@ -59,10 +59,29 @@ function main() {
 
 document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("gameOver", gameOverHandler);
+  document.addEventListener("setScore", setScoreHandler);
+  document.addEventListener("setTime", setTimeHandler);
   main();
 });
 
-function gameOverHandler (ev) {
+function setTimeHandler(ev) {
+  const seconds = ev.detail*130;
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor(seconds / 60 - hours * 60);
+  const displaySeconds = Math.round((Math.round(seconds*10)/10 - minutes * 60 - hours * 3600)-.5);
+  let outputString = "";
+  if (hours) outputString += `${hours}:`;
+  if (hours || minutes) outputString += `${hours ? minutes.toString().padStart(2, "0") : minutes}:`;
+  outputString += (hours || minutes) ? displaySeconds.toString().padStart(2, "0") : displaySeconds;
+  document.querySelector("#current-time").textContent = outputString;
+}
+
+function setScoreHandler(ev) {
+  const scoreDiv = document.querySelector("#current-score");
+  scoreDiv.textContent = ev.detail.toString();
+}
+
+function gameOverHandler(ev) {
   const menuContainer = document.querySelector("#menu-content");
 
   const menu = document.createElement("div");
@@ -79,7 +98,7 @@ function gameOverHandler (ev) {
   const titleDiv = document.createElement("div");
   titleDiv.classList.add("title");
   titleDiv.textContent = "Game Over";
-  
+
   menuContainer.appendChild(titleDiv);
   menuContainer.appendChild(menu);
 
@@ -279,6 +298,8 @@ class World {
     this.snake = snake;
     this.grid = [];
     this.gameState = GAME_STATE.DEFAULT;
+    this.score = 0;
+    this.gameTime = 0;
     this.interval = () => {};
     snake.setWorld(this);
     this.initializeGrid();
@@ -314,6 +335,11 @@ class World {
     return this.grid[y][x];
   }
 
+  incrementScore() {
+    this.score++;
+    document.dispatchEvent(new CustomEvent("setScore", { detail: this.score }));
+  }
+
   createFood() {
     let randomX = this.snake.getHead()[0];
     let randomY = this.snake.getHead()[1];
@@ -347,12 +373,17 @@ class World {
       if (this.snake.willSnakeEatFoodNextMove()) {
         const grown = this.snake.grow();
         if (grown) {
+          this.incrementScore();
           this.createFood();
         }
       } else {
         this.snake.move();
       }
       this.render();
+      this.gameTime += 0.1;
+      document.dispatchEvent(
+        new CustomEvent("setTime", { detail: this.gameTime })
+      );
     }, 100);
   }
 

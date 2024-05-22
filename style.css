@@ -13,8 +13,10 @@ html, body {
   height: 100%;
   width: 100%;
   box-sizing: border-box;
-  display: grid;
-  place-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .game-board {
@@ -123,41 +125,10 @@ html, body {
   content: "➤";
 }
 
-/* .pause-menu {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  background-color: aqua;
-  border-radius: 1em;
-  border: 2px solid black;
-  overflow: hidden;
-}
-
-.pause-menu .choice {
+.top-text-container {
   font-size: 2em;
-  padding: 1em;
-  background-color: rgb(44, 44, 44);
-  color: rgb(240, 240, 240);
-  user-select: none;
-  cursor: pointer;
+  width: 40rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
-
-.pause-menu .choice:hover {
-  background-color: rgb(78, 78, 78);
-}
-
-.counter {
-  position: absolute;
-  height: 100vh;
-  width: 100vw;
-  display: grid;
-  place-content: center;
-  text-align: center;
-  font-size: 10em;
-  font-weight: bold;
-  -webkit-text-stroke:2px rgb(240, 240, 240);
-  user-select: none;
-} */
