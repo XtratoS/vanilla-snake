@@ -29,19 +29,18 @@ html, body {
 .game-cell {
   height: 1em;
   width: 1em;
-  background-color: rgb(171, 149, 192);
 }
 
 .game-cell.type-EMPTY {
-  background-color: rgb(200, 200, 200);
+  background-color: rgb(221, 226, 230);
 }
 
 .game-cell.type-SNAKE {
-  background-color: black;
+  background-color: rgb(21, 21, 21);
 }
 
 .game-cell.type-FOOD {
-  background-color: rgb(255, 72, 0);
+  background-color: rgb(200, 10, 10);
 }
 
 .hidden {
@@ -75,7 +74,6 @@ html, body {
   justify-content: center;
   height: 100%;
   width: 100%;
-  /* background-color: rgba(255, 166, 0, 0.257); */
 }
 
 #menu-content .title {
@@ -107,6 +105,8 @@ html, body {
   position: relative;
   font-size: 2em;
   cursor: pointer;
+  padding: .2em 0;
+  box-sizing: border-box;
 }
 
 .pause-menu .choice.selected {
@@ -115,6 +115,10 @@ html, body {
 
 .pause-menu .choice.selected::before {
   position: absolute;
+  display: grid;
+  place-content: center;
+  height: 100%;
+  margin-top: -0.2em;
   left: -2em;
   content: "➤";
 }
