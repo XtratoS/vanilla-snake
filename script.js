@@ -317,10 +317,12 @@ class World {
   createFood() {
     let randomX = this.snake.getHead()[0];
     let randomY = this.snake.getHead()[1];
-    while (this.snake.cells.map((cell) => cell[0]).includes(randomX)) {
+    let Xs = this.snake.cells.map((cell) => cell[0]);
+    while (Xs.includes(randomX)) {
       randomX = Math.floor(Math.random() * this.dimension);
     }
-    while (this.snake.cells.map((cell) => cell[1]).includes(randomY)) {
+    let Ys = this.snake.cells.map((cell) => cell[1]);
+    while (Ys.includes(randomY)) {
       randomY = Math.floor(Math.random() * this.dimension);
     }
     this.setContent(randomX, randomY, CELL_CONTENT.FOOD);
